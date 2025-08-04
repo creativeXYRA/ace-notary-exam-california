@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import NotaryExamApp from './components/NotaryExamApp';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div 
+      className="App" 
+      style={{
+        background: 'linear-gradient(135deg, #f5f5f4 0%, #e7e5e4 100%)',
+        minHeight: '100vh',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+        color: '#44403c'
+      }}
+    >
+      <div style={{
+        maxWidth: '28rem',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        padding: '1rem'
+      }}>
+        <NotaryExamApp />
+      </div>
     </div>
   );
 }
