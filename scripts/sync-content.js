@@ -1,8 +1,8 @@
 // scripts/sync-content.js
-const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { JWT } = require('google-auth-library');
-const fs = require('fs').promises;
-const path = require('path');
+import { GoogleSpreadsheet } from 'google-spreadsheet';
+import { JWT } from 'google-auth-library';
+import fs from 'fs/promises';
+import path from 'path';
 
 async function syncContentFromGoogleSheets() {
   try {
