@@ -4,9 +4,87 @@ import {
   ChevronRight, ChevronLeft, Play, Pause, RotateCcw,
   Check, X, Award, Clock
 } from 'lucide-react';
-import { chapterData, getAvailableChapters, getChapterById } from '../data/chapterData';
 
-// 美化樣式對象
+// ===== 數據結構 - 易於擴充 =====
+const chapterData = {
+  1: {
+    id: 1,
+    title: "The Notary Public Office",
+    subtitle: "Fundamentals of notary public duties and responsibilities",
+    estimatedStudyTime: "15-20 min",
+    difficulty: "Beginner",
+    isAvailable: true,
+    legalCodes: [
+      {
+        id: 1,
+        code: "GC §8201.1",
+        title: "Notary Public Duties",
+        content: "A notary public is a public officer who performs notarial acts including taking acknowledgments, administering oaths and affirmations, and witnessing signatures as authorized by law.",
+        keyPoints: ["Public officer", "Acknowledgments", "Oaths & affirmations", "Witness signatures"]
+      },
+      {
+        id: 2,
+        code: "GC §8205", 
+        title: "Appointment Process",
+        content: "The Secretary of State appoints notaries public. Applicants must meet age, residency, and education requirements as specified by law.",
+        keyPoints: ["Secretary of State", "Age requirement", "Residency", "Education"]
+      }
+    ],
+    keyFacts: [
+      {
+        id: 1,
+        fact: "Notary commission lasts 4 years",
+        category: "Commission",
+        importance: "high"
+      },
+      {
+        id: 2,
+        fact: "Must be 18+ years old and California resident",
+        category: "Requirements",
+        importance: "high"
+      }
+    ],
+    questions: [
+      {
+        id: 1,
+        question: "How long does a notary commission last?",
+        options: ["2 years", "3 years", "4 years", "5 years"],
+        correct: 2,
+        explanation: "According to California law, a notary public commission is valid for 4 years from the date of appointment."
+      }
+    ],
+    flashCards: [
+      {
+        id: 1,
+        front: "Commission Duration",
+        back: "4 years from appointment date"
+      }
+    ]
+  },
+  2: {
+    id: 2,
+    title: "Five Steps of Notarization",
+    subtitle: "Step-by-step notarization process",
+    estimatedStudyTime: "20-25 min",
+    difficulty: "Intermediate",
+    isAvailable: false,
+    legalCodes: [],
+    keyFacts: [],
+    questions: [],
+    flashCards: []
+  }
+};
+
+// 輔助函數
+const getAvailableChapters = () => {
+  return Object.values(chapterData).filter(chapter => chapter.isAvailable);
+};
+
+const getChapterById = (id) => {
+  return chapterData[id] || null;
+};
+
+// 樣式
 const styles = {
   card: {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -14,16 +92,7 @@ const styles = {
     padding: '1rem',
     marginBottom: '1.5rem',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-    border: '1px solid rgba(214, 211, 209, 0.6)',
-    backdropFilter: 'blur(10px)'
-  },
-  progressCard: {
-    background: 'linear-gradient(135deg, #f2e6e6 0%, #e8d6d6 100%)',
-    borderRadius: '1rem',
-    padding: '1rem',
-    marginBottom: '1.5rem',
-    border: '1px solid rgba(190, 123, 123, 0.2)',
-    boxShadow: '0 2px 8px rgba(190, 123, 123, 0.1)'
+    border: '1px solid rgba(214, 211, 209, 0.6)'
   },
   button: {
     background: 'linear-gradient(135deg, #be7b7b 0%, #a86b6b 100%)',
@@ -32,208 +101,31 @@ const styles = {
     borderRadius: '0.75rem',
     border: 'none',
     cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    fontFamily: 'inherit',
-    boxShadow: '0 4px 15px rgba(190, 123, 123, 0.3)'
-  },
-  buttonSecondary: {
-    background: 'linear-gradient(135deg, #f5f5f4 0%, #e7e5e4 100%)',
-    color: '#57534e',
-    padding: '0.75rem 1.5rem',
-    borderRadius: '0.75rem',
-    border: '1px solid rgba(214, 211, 209, 0.6)',
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-    transition: 'all 0.3s ease'
-  },
-  featureCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: '1rem',
-    padding: '1rem',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-    border: '1px solid rgba(214, 211, 209, 0.6)',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    backdropFilter: 'blur(10px)'
-  },
-  title: {
-    fontSize: '1.75rem',
-    fontWeight: '800',
-    color: '#44403c',
-    letterSpacing: '-0.025em',
-    marginBottom: '0.25rem'
-  },
-  subtitle: {
-    color: '#be7b7b',
-    fontSize: '0.875rem',
-    fontWeight: '500',
-    marginBottom: '0.5rem'
-  },
-  sectionTitle: {
-    fontWeight: '600',
-    color: '#8b5a5a',
-    marginBottom: '0.75rem'
+    fontFamily: 'inherit'
   },
   navButton: {
     padding: '0.5rem',
     backgroundColor: 'transparent',
     border: 'none',
-    cursor: 'pointer',
-    borderRadius: '0.5rem',
-    transition: 'all 0.3s ease'
+    cursor: 'pointer'
   }
 };
 
 const NotaryExamApp = () => {
-  // 狀態管理
   const [currentView, setCurrentView] = useState('home');
   const [selectedChapter, setSelectedChapter] = useState(1);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentFlashCardIndex, setCurrentFlashCardIndex] = useState(0);
   const [showFlashCardAnswer, setShowFlashCardAnswer] = useState(false);
   const [userAnswers, setUserAnswers] = useState({});
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audioSpeed, setAudioSpeed] = useState(1.0);
-  const [autoStopTimer, setAutoStopTimer] = useState('never');
-  const [audioContent, setAudioContent] = useState('legal-codes');
-  
-  // 音頻系統
-  const speechRef = useRef(null);
-  const timerRef = useRef(null);
-  
-  // 進度數據
-  const [progressData, setProgressData] = useState(() => {
-    const saved = localStorage.getItem('notaryExamProgress');
-    return saved ? JSON.parse(saved) : {
-      questionsAnswered: 0,
-      correctAnswers: 0,
-      wrongAnswers: [],
-      dailyActivity: {},
-      completedChapters: [],
-      currentStreak: 0,
-      bestStreak: 0,
-      totalStudyTime: 0
-    };
+  const [progressData, setProgressData] = useState({
+    questionsAnswered: 0,
+    correctAnswers: 0,
+    wrongAnswers: []
   });
 
-  // 音頻功能
-  const speakNormalContent = (text) => {
-    speechRef.current = new SpeechSynthesisUtterance(text);
-    speechRef.current.rate = audioSpeed;
-    speechRef.current.lang = 'en-US';
-    
-    speechRef.current.onend = () => {
-      setIsPlaying(false);
-    };
-    
-    window.speechSynthesis.speak(speechRef.current);
-    setIsPlaying(true);
-    setAutoStopTimeout();
-  };
-
-  const speakQAWithPauses = () => {
-    const chapter = getChapterById(selectedChapter);
-    if (!chapter) return;
-    
-    let questionIndex = 0;
-    
-    const speakNextQuestion = () => {
-      if (questionIndex >= chapter.questions.length) {
-        setIsPlaying(false);
-        return;
-      }
-      
-      const question = chapter.questions[questionIndex];
-      
-      const questionText = `Question ${questionIndex + 1}: ${question.question}`;
-      speechRef.current = new SpeechSynthesisUtterance(questionText);
-      speechRef.current.rate = audioSpeed;
-      speechRef.current.lang = 'en-US';
-      
-      speechRef.current.onend = () => {
-        setTimeout(() => {
-          if (isPlaying) {
-            const answerText = `Answer: ${question.options[question.correct]}. Explanation: ${question.explanation}`;
-            speechRef.current = new SpeechSynthesisUtterance(answerText);
-            speechRef.current.rate = audioSpeed;
-            speechRef.current.lang = 'en-US';
-            
-            speechRef.current.onend = () => {
-              questionIndex++;
-              if (isPlaying) {
-                setTimeout(() => speakNextQuestion(), 1000);
-              }
-            };
-            
-            window.speechSynthesis.speak(speechRef.current);
-          }
-        }, 3000);
-      };
-      
-      window.speechSynthesis.speak(speechRef.current);
-    };
-    
-    setIsPlaying(true);
-    setAutoStopTimeout();
-    speakNextQuestion();
-  };
-
-  const startSpeaking = (text) => {
-    if ('speechSynthesis' in window) {
-      if (audioContent === 'qa') {
-        speakQAWithPauses();
-      } else {
-        speakNormalContent(text);
-      }
-    }
-  };
-
-  const stopSpeaking = () => {
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-      setIsPlaying(false);
-    }
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-  };
-
-  const setAutoStopTimeout = () => {
-    const timeouts = {
-      '15min': 15 * 60 * 1000,
-      '30min': 30 * 60 * 1000,
-      '45min': 45 * 60 * 1000,
-      '1hour': 60 * 60 * 1000
-    };
-    
-    if (timeouts[autoStopTimer]) {
-      timerRef.current = setTimeout(() => {
-        stopSpeaking();
-      }, timeouts[autoStopTimer]);
-    }
-  };
-
-  const getAudioText = () => {
-    const chapter = getChapterById(selectedChapter);
-    if (!chapter) return '';
-    
-    switch (audioContent) {
-      case 'legal-codes':
-        return chapter.legalCodes.map(code => `${code.title}: ${code.content}`).join('. ');
-      case 'key-facts':
-        return chapter.keyFacts.map(fact => fact.fact).join('. ');
-      case 'qa':
-        return chapter.questions.map(q => `Question: ${q.question} Answer: ${q.options[q.correct]}. Explanation: ${q.explanation}`).join(' ');
-      default:
-        return chapter.keyFacts.map(fact => fact.fact).join('. ');
-    }
-  };
-
-  // 進度管理
   const updateProgress = (isCorrect, questionIndex) => {
-    const today = new Date().toISOString().split('T')[0];
     const newProgress = { ...progressData };
-    
     newProgress.questionsAnswered += 1;
     if (isCorrect) {
       newProgress.correctAnswers += 1;
@@ -244,32 +136,33 @@ const NotaryExamApp = () => {
         timestamp: new Date().toISOString()
       });
     }
-    
-    newProgress.dailyActivity[today] = (newProgress.dailyActivity[today] || 0) + 1;
-    
     setProgressData(newProgress);
-    localStorage.setItem('notaryExamProgress', JSON.stringify(newProgress));
   };
 
-  // 視圖組件
   const HomeView = () => {
     const availableChapters = getAvailableChapters();
     
     return (
       <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
         <div style={{textAlign: 'center'}}>
-          <h1 style={styles.title}>ACE in Notary Exam California</h1>
-          <p style={styles.subtitle}>Bite-size Learning | Sleep Memorizing | AI-driven Optimization</p>
+          <h1 style={{fontSize: '1.75rem', fontWeight: '800', color: '#44403c'}}>
+            ACE in Notary Exam California
+          </h1>
+          <p style={{color: '#be7b7b', fontSize: '0.875rem'}}>
+            Bite-size Learning | Sleep Memorizing | AI-driven Optimization
+          </p>
         </div>
         
-        <div style={styles.progressCard}>
+        <div style={styles.card}>
           <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem'}}>
-            <h3 style={styles.sectionTitle}>Learning Progress</h3>
+            <h3 style={{fontWeight: '600', color: '#8b5a5a'}}>Learning Progress</h3>
             <Award style={{color: '#be7b7b'}} size={20} />
           </div>
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem'}}>
             <div style={{textAlign: 'center'}}>
-              <div style={{fontSize: '1.5rem', fontWeight: 'bold', color: '#be7b7b'}}>{progressData.questionsAnswered}</div>
+              <div style={{fontSize: '1.5rem', fontWeight: 'bold', color: '#be7b7b'}}>
+                {progressData.questionsAnswered}
+              </div>
               <div style={{fontSize: '0.75rem', color: '#8b5a5a'}}>Questions</div>
             </div>
             <div style={{textAlign: 'center'}}>
@@ -283,144 +176,48 @@ const NotaryExamApp = () => {
           </div>
         </div>
 
-        <div style={styles.card}>
-          <h3 style={styles.sectionTitle}>Available Chapters</h3>
-          <div style={{fontSize: '0.875rem', color: '#78716c', marginBottom: '0.5rem'}}>
-            {availableChapters.length} of {Object.keys(chapterData).length} chapters ready
-          </div>
-          <div style={{width: '100%', backgroundColor: '#e7e5e4', borderRadius: '9999px', height: '0.5rem', overflow: 'hidden'}}>
-            <div 
-              style={{
-                background: 'linear-gradient(90deg, #be7b7b 0%, #d4928a 100%)',
-                height: '0.5rem',
-                borderRadius: '9999px',
-                width: `${(availableChapters.length / Object.keys(chapterData).length) * 100}%`,
-                transition: 'width 0.8s ease'
-              }}
-            ></div>
-          </div>
-        </div>
-
         <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem'}}>
           <button
             onClick={() => setCurrentView('chapters')}
-            style={{...styles.featureCard, textAlign: 'left'}}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'translateY(-2px)';
-              e.target.style.boxShadow = '0 4px 20px rgba(190, 123, 123, 0.2)';
-              e.target.style.borderColor = 'rgba(190, 123, 123, 0.8)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
-              e.target.style.borderColor = 'rgba(214, 211, 209, 0.6)';
-            }}
+            style={{...styles.card, textAlign: 'left', cursor: 'pointer'}}
           >
             <BookOpen style={{color: '#be7b7b', marginBottom: '0.5rem'}} size={24} />
             <div>
-              <h3 style={{fontWeight: '500', color: '#44403c', marginBottom: '0.25rem'}}>Chapter Study</h3>
+              <h3 style={{fontWeight: '500', color: '#44403c'}}>Chapter Study</h3>
               <p style={{fontSize: '0.875rem', color: '#78716c'}}>Legal codes & key facts</p>
             </div>
           </button>
 
           <button
             onClick={() => setCurrentView('flashcards')}
-            style={{...styles.featureCard, textAlign: 'left'}}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'translateY(-2px)';
-              e.target.style.boxShadow = '0 4px 20px rgba(190, 123, 123, 0.2)';
-              e.target.style.borderColor = 'rgba(190, 123, 123, 0.8)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
-              e.target.style.borderColor = 'rgba(214, 211, 209, 0.6)';
-            }}
+            style={{...styles.card, textAlign: 'left', cursor: 'pointer'}}
           >
             <Brain style={{color: '#be7b7b', marginBottom: '0.5rem'}} size={24} />
             <div>
-              <h3 style={{fontWeight: '500', color: '#44403c', marginBottom: '0.25rem'}}>Flash Cards</h3>
+              <h3 style={{fontWeight: '500', color: '#44403c'}}>Flash Cards</h3>
               <p style={{fontSize: '0.875rem', color: '#78716c'}}>Quick memory training</p>
             </div>
           </button>
 
           <button
             onClick={() => setCurrentView('quiz')}
-            style={{...styles.featureCard, textAlign: 'left'}}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'translateY(-2px)';
-              e.target.style.boxShadow = '0 4px 20px rgba(190, 123, 123, 0.2)';
-              e.target.style.borderColor = 'rgba(190, 123, 123, 0.8)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
-              e.target.style.borderColor = 'rgba(214, 211, 209, 0.6)';
-            }}
+            style={{...styles.card, textAlign: 'left', cursor: 'pointer'}}
           >
             <FileText style={{color: '#be7b7b', marginBottom: '0.5rem'}} size={24} />
             <div>
-              <h3 style={{fontWeight: '500', color: '#44403c', marginBottom: '0.25rem'}}>Practice Quiz</h3>
+              <h3 style={{fontWeight: '500', color: '#44403c'}}>Practice Quiz</h3>
               <p style={{fontSize: '0.875rem', color: '#78716c'}}>Test your knowledge</p>
             </div>
           </button>
 
           <button
             onClick={() => setCurrentView('audio')}
-            style={{...styles.featureCard, textAlign: 'left'}}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'translateY(-2px)';
-              e.target.style.boxShadow = '0 4px 20px rgba(190, 123, 123, 0.2)';
-              e.target.style.borderColor = 'rgba(190, 123, 123, 0.8)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
-              e.target.style.borderColor = 'rgba(214, 211, 209, 0.6)';
-            }}
+            style={{...styles.card, textAlign: 'left', cursor: 'pointer'}}
           >
             <Volume2 style={{color: '#be7b7b', marginBottom: '0.5rem'}} size={24} />
             <div>
-              <h3 style={{fontWeight: '500', color: '#44403c', marginBottom: '0.25rem'}}>Audio Learning</h3>
+              <h3 style={{fontWeight: '500', color: '#44403c'}}>Audio Learning</h3>
               <p style={{fontSize: '0.875rem', color: '#78716c'}}>Sleep learning mode</p>
-            </div>
-          </button>
-        </div>
-
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem'}}>
-          <button
-            onClick={() => setCurrentView('history')}
-            style={styles.buttonSecondary}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'translateY(-1px)';
-              e.target.style.background = 'linear-gradient(135deg, #f0efee 0%, #e5e3e2 100%)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.background = 'linear-gradient(135deg, #f5f5f4 0%, #e7e5e4 100%)';
-            }}
-          >
-            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'}}>
-              <History style={{color: '#7c7269'}} size={20} />
-              <span style={{color: '#68615a'}}>History</span>
-            </div>
-          </button>
-          
-          <button
-            onClick={() => setCurrentView('resources')}
-            style={styles.buttonSecondary}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'translateY(-1px)';
-              e.target.style.background = 'linear-gradient(135deg, #f0efee 0%, #e5e3e2 100%)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.background = 'linear-gradient(135deg, #f5f5f4 0%, #e7e5e4 100%)';
-            }}
-          >
-            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'}}>
-              <FileText style={{color: '#7c7269'}} size={20} />
-              <span style={{color: '#68615a'}}>Resources</span>
             </div>
           </button>
         </div>
@@ -428,7 +225,6 @@ const NotaryExamApp = () => {
     );
   };
 
-  // 其他視圖組件保持原樣，但會使用統一的樣式
   const ChaptersView = () => {
     return (
       <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
@@ -450,63 +246,25 @@ const NotaryExamApp = () => {
                     setCurrentView('summary');
                   }}
                   style={{...styles.card, width: '100%', textAlign: 'left', cursor: 'pointer'}}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.borderColor = 'rgba(190, 123, 123, 0.8)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.borderColor = 'rgba(214, 211, 209, 0.6)';
-                  }}
                 >
                   <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                     <div>
-                      <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem'}}>
-                        <h3 style={{fontWeight: '500', color: '#44403c'}}>Chapter {chapter.id}: {chapter.title}</h3>
-                        <span style={{
-                          backgroundColor: '#e6f2e6',
-                          color: '#6b8f4a',
-                          fontSize: '0.75rem',
-                          padding: '0.125rem 0.5rem',
-                          borderRadius: '0.25rem'
-                        }}>
-                          Ready
-                        </span>
-                      </div>
-                      <p style={{fontSize: '0.875rem', color: '#78716c', marginBottom: '0.5rem'}}>{chapter.subtitle}</p>
-                      <div style={{display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.75rem', color: '#a8a29e'}}>
-                        <span>📚 {chapter.questions.length} questions</span>
-                        <span>⏱️ {chapter.estimatedStudyTime}</span>
-                        <span>🎯 {chapter.difficulty}</span>
-                      </div>
+                      <h3 style={{fontWeight: '500', color: '#44403c'}}>
+                        Chapter {chapter.id}: {chapter.title}
+                      </h3>
+                      <p style={{fontSize: '0.875rem', color: '#78716c'}}>{chapter.subtitle}</p>
                     </div>
                     <ChevronRight style={{color: '#d6d3d1'}} size={20} />
                   </div>
                 </button>
               ) : (
-                <div style={{
-                  ...styles.card,
-                  opacity: 0.5,
-                  backgroundColor: '#f5f5f4'
-                }}>
+                <div style={{...styles.card, opacity: 0.5}}>
                   <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                     <div>
-                      <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem'}}>
-                        <h3 style={{fontWeight: '500', color: '#78716c'}}>Chapter {chapter.id}: {chapter.title}</h3>
-                        <span style={{
-                          backgroundColor: '#f2ebe6',
-                          color: '#b5956b',
-                          fontSize: '0.75rem',
-                          padding: '0.125rem 0.5rem',
-                          borderRadius: '0.25rem'
-                        }}>
-                          Coming Soon
-                        </span>
-                      </div>
-                      <p style={{fontSize: '0.875rem', color: '#a8a29e', marginBottom: '0.5rem'}}>{chapter.subtitle}</p>
-                      <div style={{fontSize: '0.75rem', color: '#d6d3d1'}}>
-                        ⏱️ {chapter.estimatedStudyTime} • 🎯 {chapter.difficulty}
-                      </div>
+                      <h3 style={{fontWeight: '500', color: '#78716c'}}>
+                        Chapter {chapter.id}: {chapter.title}
+                      </h3>
+                      <p style={{fontSize: '0.875rem', color: '#a8a29e'}}>Coming soon</p>
                     </div>
                     <Clock style={{color: '#d6d3d1'}} size={20} />
                   </div>
@@ -519,10 +277,9 @@ const NotaryExamApp = () => {
     );
   };
 
-  // 簡化其他視圖組件 - 保持基本功能但使用統一樣式
   const SummaryView = () => {
     const chapter = getChapterById(selectedChapter);
-    if (!chapter) return <div>Chapter not found</div>;
+    if (!chapter) return <div style={styles.card}>Chapter not found</div>;
     
     return (
       <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
@@ -537,85 +294,200 @@ const NotaryExamApp = () => {
           <div></div>
         </div>
 
-        <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+        {chapter.legalCodes.length > 0 && (
           <div>
-            <h3 style={styles.sectionTitle}>Legal Codes</h3>
+            <h3 style={{fontWeight: '600', color: '#8b5a5a', marginBottom: '0.75rem'}}>Legal Codes</h3>
             {chapter.legalCodes.map((code) => (
-              <div key={code.id} style={{...styles.card, marginBottom: '0.75rem'}}>
-                <div style={{display: 'flex', alignItems: 'start', justifyContent: 'space-between', marginBottom: '0.5rem'}}>
-                  <h4 style={{fontWeight: '500', color: '#44403c'}}>{code.title}</h4>
-                  <span style={{
-                    fontSize: '0.75rem',
-                    color: '#be7b7b',
-                    backgroundColor: '#f2e6e6',
-                    padding: '0.125rem 0.5rem',
-                    borderRadius: '0.25rem'
-                  }}>{code.code}</span>
-                </div>
-                <p style={{color: '#78716c', fontSize: '0.875rem', lineHeight: '1.625', marginBottom: '0.5rem'}}>{code.content}</p>
-                <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem'}}>
-                  {code.keyPoints.map((point, idx) => (
-                    <span key={idx} style={{
-                      fontSize: '0.75rem',
-                      backgroundColor: '#f5f5f4',
-                      color: '#68615a',
-                      padding: '0.125rem 0.5rem',
-                      borderRadius: '0.25rem'
-                    }}>
-                      {point}
-                    </span>
-                  ))}
-                </div>
+              <div key={code.id} style={styles.card}>
+                <h4 style={{fontWeight: '500', color: '#44403c'}}>{code.title}</h4>
+                <p style={{color: '#78716c', fontSize: '0.875rem'}}>{code.content}</p>
               </div>
             ))}
           </div>
+        )}
 
+        {chapter.keyFacts.length > 0 && (
           <div>
-            <h3 style={styles.sectionTitle}>Key Facts</h3>
+            <h3 style={{fontWeight: '600', color: '#8b5a5a', marginBottom: '0.75rem'}}>Key Facts</h3>
             <div style={styles.card}>
-              <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem'}}>
-                {chapter.keyFacts.map((factObj) => (
-                  <div key={factObj.id} style={{
-                    display: 'flex',
-                    alignItems: 'start',
-                    gap: '0.75rem',
-                    padding: '0.5rem',
-                    borderRadius: '0.5rem',
-                    backgroundColor: '#fafaf9'
-                  }}>
-                    <div style={{
-                      width: '0.75rem',
-                      height: '0.75rem',
-                      borderRadius: '50%',
-                      marginTop: '0.25rem',
-                      flexShrink: 0,
-                      backgroundColor: factObj.importance === 'high' ? '#f87171' : 
-                                      factObj.importance === 'medium' ? '#facc15' : '#4ade80'
-                    }}></div>
-                    <div>
-                      <span style={{color: '#57534e', fontSize: '0.875rem'}}>{factObj.fact}</span>
-                      <div style={{fontSize: '0.75rem', color: '#a8a29e', marginTop: '0.25rem'}}>
-                        Category: {factObj.category}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              {chapter.keyFacts.map((factObj) => (
+                <div key={factObj.id} style={{marginBottom: '0.5rem'}}>
+                  <span style={{color: '#57534e', fontSize: '0.875rem'}}>{factObj.fact}</span>
+                </div>
+              ))}
             </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const FlashCardsView = () => {
+    const chapter = getChapterById(selectedChapter);
+    if (!chapter || !chapter.flashCards || chapter.flashCards.length === 0) {
+      return (
+        <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+            <button onClick={() => setCurrentView('home')} style={styles.navButton}>
+              <ChevronLeft style={{color: '#78716c'}} size={20} />
+            </button>
+            <h2 style={{fontWeight: 'bold', color: '#44403c'}}>Flash Cards</h2>
+            <div></div>
+          </div>
+          <div style={styles.card}>
+            <p>No flash cards available for this chapter yet.</p>
+          </div>
+        </div>
+      );
+    }
+
+    const cards = chapter.flashCards;
+    const currentCard = cards[currentFlashCardIndex];
+
+    return (
+      <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+          <button onClick={() => setCurrentView('home')} style={styles.navButton}>
+            <ChevronLeft style={{color: '#78716c'}} size={20} />
+          </button>
+          <div style={{textAlign: 'center'}}>
+            <h2 style={{fontWeight: 'bold', color: '#44403c'}}>Flash Cards</h2>
+            <p style={{fontSize: '0.875rem', color: '#78716c'}}>{currentFlashCardIndex + 1} / {cards.length}</p>
+          </div>
+          <div></div>
+        </div>
+
+        <div style={{...styles.card, minHeight: '12rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <div style={{textAlign: 'center'}}>
+            <div style={{fontSize: '1.125rem', fontWeight: '500', color: '#44403c', marginBottom: '1rem'}}>
+              {showFlashCardAnswer ? currentCard.back : currentCard.front}
+            </div>
+            {!showFlashCardAnswer ? (
+              <button
+                onClick={() => setShowFlashCardAnswer(true)}
+                style={styles.button}
+              >
+                Show Answer
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  if (currentFlashCardIndex < cards.length - 1) {
+                    setCurrentFlashCardIndex(currentFlashCardIndex + 1);
+                    setShowFlashCardAnswer(false);
+                  }
+                }}
+                style={styles.button}
+              >
+                Next Card
+              </button>
+            )}
           </div>
         </div>
       </div>
     );
   };
 
-  // 添加其他視圖的簡化版本
-  const FlashCardsView = () => <div style={styles.card}>Flash Cards View - Coming Soon</div>;
-  const QuizView = () => <div style={styles.card}>Quiz View - Coming Soon</div>;
-  const AudioView = () => <div style={styles.card}>Audio View - Coming Soon</div>;
-  const HistoryView = () => <div style={styles.card}>History View - Coming Soon</div>;
-  const ResourcesView = () => <div style={styles.card}>Resources View - Coming Soon</div>;
+  const QuizView = () => {
+    const chapter = getChapterById(selectedChapter);
+    if (!chapter || !chapter.questions || chapter.questions.length === 0) {
+      return (
+        <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+            <button onClick={() => setCurrentView('home')} style={styles.navButton}>
+              <ChevronLeft style={{color: '#78716c'}} size={20} />
+            </button>
+            <h2 style={{fontWeight: 'bold', color: '#44403c'}}>Practice Quiz</h2>
+            <div></div>
+          </div>
+          <div style={styles.card}>
+            <p>No quiz questions available for this chapter yet.</p>
+          </div>
+        </div>
+      );
+    }
 
-  // 主要渲染
+    const questions = chapter.questions;
+    const currentQuestion = questions[currentQuestionIndex];
+    const userAnswer = userAnswers[currentQuestionIndex];
+
+    const handleAnswer = (answerIndex) => {
+      const newAnswers = { ...userAnswers };
+      newAnswers[currentQuestionIndex] = answerIndex;
+      setUserAnswers(newAnswers);
+      
+      const isCorrect = answerIndex === currentQuestion.correct;
+      updateProgress(isCorrect, currentQuestionIndex);
+    };
+
+    return (
+      <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+          <button onClick={() => setCurrentView('home')} style={styles.navButton}>
+            <ChevronLeft style={{color: '#78716c'}} size={20} />
+          </button>
+          <div style={{textAlign: 'center'}}>
+            <h2 style={{fontWeight: 'bold', color: '#44403c'}}>Practice Quiz</h2>
+            <p style={{fontSize: '0.875rem', color: '#78716c'}}>{currentQuestionIndex + 1} / {questions.length}</p>
+          </div>
+          <div></div>
+        </div>
+
+        <div style={styles.card}>
+          <h3 style={{fontWeight: '500', color: '#44403c', marginBottom: '1rem'}}>{currentQuestion.question}</h3>
+          
+          <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem'}}>
+            {currentQuestion.options.map((option, index) => (
+              <button
+                key={index}
+                onClick={() => handleAnswer(index)}
+                style={{
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '0.75rem',
+                  borderRadius: '0.5rem',
+                  border: '1px solid #e7e5e4',
+                  cursor: 'pointer',
+                  backgroundColor: userAnswer === index
+                    ? userAnswer === currentQuestion.correct ? '#dcfce7' : '#fecaca'
+                    : '#fafaf9'
+                }}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+
+          {userAnswer !== undefined && (
+            <div style={{
+              marginTop: '1rem',
+              padding: '1rem',
+              backgroundColor: '#eff6ff',
+              borderRadius: '0.5rem'
+            }}>
+              <p style={{color: '#1e40af', fontSize: '0.875rem'}}>{currentQuestion.explanation}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const AudioView = () => (
+    <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+        <button onClick={() => setCurrentView('home')} style={styles.navButton}>
+          <ChevronLeft style={{color: '#78716c'}} size={20} />
+        </button>
+        <h2 style={{fontWeight: 'bold', color: '#44403c'}}>Audio Learning</h2>
+        <div></div>
+      </div>
+      <div style={styles.card}>
+        <p>Audio learning features coming soon!</p>
+      </div>
+    </div>
+  );
+
   return (
     <div>
       {currentView === 'home' && <HomeView />}
@@ -624,8 +496,6 @@ const NotaryExamApp = () => {
       {currentView === 'flashcards' && <FlashCardsView />}
       {currentView === 'quiz' && <QuizView />}
       {currentView === 'audio' && <AudioView />}
-      {currentView === 'history' && <HistoryView />}
-      {currentView === 'resources' && <ResourcesView />}
     </div>
   );
 };
