@@ -1,3 +1,4 @@
+# .github/workflows/sync-content.yml
 name: Sync Content from Google Sheets
 
 on:
@@ -23,7 +24,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
+      
+      - name: Create package.json for ES modules
+        run: |
+          echo '{"type": "module"}' > package.json
       
       - name: Install dependencies
         run: |
