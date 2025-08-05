@@ -1,0 +1,10 @@
+{
+  "id": "documents",
+  "title": "Document Types",
+  "description": "Different types of documents and requirements",
+  "order": 5,
+  "color": "#8B5CF6",
+  "icon": "📄",
+  "flashcards": [],
+  "audio": []
+}

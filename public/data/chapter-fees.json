@@ -1,0 +1,33 @@
+{
+  "id": "fees",
+  "title": "Fees & Billing",
+  "description": "Understanding notary fees and charges",
+  "order": 3,
+  "color": "#F59E0B",
+  "icon": "💰",
+  "flashcards": [
+    {
+      "id": "fc003",
+      "question": "What is the maximum fee a California notary can charge per signature?",
+      "answer": "$15 per signature",
+      "explanation": "As of 2023 California notaries can charge up to $15 per signature for acknowledgments and jurats",
+      "chapter": "fees",
+      "difficulty": "easy",
+      "tags": [
+        "fees",
+        "legal"
+      ]
+    }
+  ],
+  "audio": [
+    {
+      "id": "audio003",
+      "title": "Fee Structure Explanation",
+      "filename": "fee-structure.mp3",
+      "duration": "08:15",
+      "chapter": "fees",
+      "type": "explanation",
+      "description": "Understanding notary fees and billing practices"
+    }
+  ]
+}
