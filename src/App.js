@@ -1,5 +1,6 @@
 import React from 'react';
 import NotaryExamApp from './components/NotaryExamApp';
+import DataTest from './components/DataTest';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         color: '#44403c'
       }}
     >
+      <DataTest />
       <div style={{
         maxWidth: '28rem',
         marginLeft: 'auto',
