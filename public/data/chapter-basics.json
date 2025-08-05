@@ -1,0 +1,33 @@
+{
+  "id": "basics",
+  "title": "Notary Basics",
+  "description": "Introduction to notary public fundamentals",
+  "order": 1,
+  "color": "#3B82F6",
+  "icon": "📚",
+  "flashcards": [
+    {
+      "id": "fc001",
+      "question": "What is a notary public?",
+      "answer": "An official authorized to perform legal formalities",
+      "explanation": "A notary public is a person authorized by the state to witness signatures and deter fraud",
+      "chapter": "basics",
+      "difficulty": "easy",
+      "tags": [
+        "notary",
+        "basics"
+      ]
+    }
+  ],
+  "audio": [
+    {
+      "id": "audio001",
+      "title": "Notary Basics Overview",
+      "filename": "notary-basics-overview.mp3",
+      "duration": "15:30",
+      "chapter": "basics",
+      "type": "podcast",
+      "description": "Complete overview of notary public fundamentals"
+    }
+  ]
+}

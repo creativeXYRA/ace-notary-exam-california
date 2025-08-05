@@ -1,0 +1,33 @@
+{
+  "id": "legal-requirements",
+  "title": "Legal Requirements",
+  "description": "California state laws and regulations",
+  "order": 2,
+  "color": "#10B981",
+  "icon": "⚖️",
+  "flashcards": [
+    {
+      "id": "fc002",
+      "question": "What documents cannot be notarized without the signer present?",
+      "answer": "All documents requiring notarization",
+      "explanation": "California law requires the signer to appear personally before the notary for all notarizations",
+      "chapter": "legal-requirements",
+      "difficulty": "medium",
+      "tags": [
+        "presence",
+        "legal"
+      ]
+    }
+  ],
+  "audio": [
+    {
+      "id": "audio002",
+      "title": "Legal Requirements Deep Dive",
+      "filename": "legal-requirements.mp3",
+      "duration": "22:45",
+      "chapter": "legal-requirements",
+      "type": "podcast",
+      "description": "Detailed discussion of California notary legal requirements"
+    }
+  ]
+}
