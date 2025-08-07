@@ -19,15 +19,5 @@
       ]
     }
   ],
-  "audio": [
-    {
-      "id": "audio001",
-      "title": "Notary Basics Overview",
-      "filename": "notary-basics-overview.mp3",
-      "duration": "15:30",
-      "chapter": "basics",
-      "type": "podcast",
-      "description": "Complete overview of notary public fundamentals"
-    }
-  ]
+  "audio": []
 }

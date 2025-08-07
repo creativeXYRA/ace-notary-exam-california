@@ -1,10 +1,10 @@
 {
   "meta": {
-    "lastUpdated": "2025-08-06T13:56:01.948Z",
+    "lastUpdated": "2025-08-07T03:58:41.516Z",
     "version": "1.2.0",
     "totalFlashcards": 3,
     "totalChapters": 5,
-    "totalAudio": 3
+    "totalAudio": 2
   },
   "settings": {
     "app_name": "ACE Notary Exam California",
@@ -36,17 +36,7 @@
           ]
         }
       ],
-      "audio": [
-        {
-          "id": "audio001",
-          "title": "Notary Basics Overview",
-          "filename": "notary-basics-overview.mp3",
-          "duration": "15:30",
-          "chapter": "basics",
-          "type": "podcast",
-          "description": "Complete overview of notary public fundamentals"
-        }
-      ]
+      "audio": []
     },
     {
       "id": "legal-requirements",
@@ -69,17 +59,7 @@
           ]
         }
       ],
-      "audio": [
-        {
-          "id": "audio002",
-          "title": "Legal Requirements Deep Dive",
-          "filename": "legal-requirements.mp3",
-          "duration": "22:45",
-          "chapter": "legal-requirements",
-          "type": "podcast",
-          "description": "Detailed discussion of California notary legal requirements"
-        }
-      ]
+      "audio": []
     },
     {
       "id": "fees",
@@ -102,17 +82,7 @@
           ]
         }
       ],
-      "audio": [
-        {
-          "id": "audio003",
-          "title": "Fee Structure Explanation",
-          "filename": "fee-structure.mp3",
-          "duration": "08:15",
-          "chapter": "fees",
-          "type": "explanation",
-          "description": "Understanding notary fees and billing practices"
-        }
-      ]
+      "audio": []
     },
     {
       "id": "procedures",
@@ -176,30 +146,21 @@
   "audio": [
     {
       "id": "audio001",
-      "title": "Notary Basics Overview",
-      "filename": "notary-basics-overview.mp3",
-      "duration": "15:30",
-      "chapter": "basics",
+      "title": "Chapters 1-3 Deep Dive",
+      "filename": "chapters-1-3-podcast.wav",
+      "duration": "25:30:00",
+      "chapter": "notary-fundamentals",
       "type": "podcast",
-      "description": "Complete overview of notary public fundamentals"
+      "description": "NotebookLM podcast covering Notary Fundamentals Notarial Procedures and Record Keeping "
     },
     {
       "id": "audio002",
-      "title": "Legal Requirements Deep Dive",
-      "filename": "legal-requirements.mp3",
-      "duration": "22:45",
-      "chapter": "legal-requirements",
+      "title": "Chapters 4-5 Deep Dive",
+      "filename": "chapters-4-5-podcast.wav",
+      "duration": "22:15",
+      "chapter": "signature-acknowledgments",
       "type": "podcast",
-      "description": "Detailed discussion of California notary legal requirements"
-    },
-    {
-      "id": "audio003",
-      "title": "Fee Structure Explanation",
-      "filename": "fee-structure.mp3",
-      "duration": "08:15",
-      "chapter": "fees",
-      "type": "explanation",
-      "description": "Understanding notary fees and billing practices"
+      "description": "NotebookLM podcast covering Signature Acknowledgments and Sworn Statements"
     }
   ]
 }

@@ -19,15 +19,5 @@
       ]
     }
   ],
-  "audio": [
-    {
-      "id": "audio003",
-      "title": "Fee Structure Explanation",
-      "filename": "fee-structure.mp3",
-      "duration": "08:15",
-      "chapter": "fees",
-      "type": "explanation",
-      "description": "Understanding notary fees and billing practices"
-    }
-  ]
+  "audio": []
 }

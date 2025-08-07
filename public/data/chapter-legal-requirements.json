@@ -19,15 +19,5 @@
       ]
     }
   ],
-  "audio": [
-    {
-      "id": "audio002",
-      "title": "Legal Requirements Deep Dive",
-      "filename": "legal-requirements.mp3",
-      "duration": "22:45",
-      "chapter": "legal-requirements",
-      "type": "podcast",
-      "description": "Detailed discussion of California notary legal requirements"
-    }
-  ]
+  "audio": []
 }
